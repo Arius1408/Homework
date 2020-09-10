@@ -1,75 +1,74 @@
 #include <iostream>
 #include <vector>
 
-// Assume that the limit length is 5000
-std::vector <bool> status[10000];
-std::vector <int> depth[10000];
+const int width = 5000 * 2 + 10;
 
-// Declare the value for later navigate
+std::pair <int, int> curr = {5000, 5000};
+
 // 0 = forward, 1 = left, 2 = back, 3 = right
 int dx[4] = {0, -1, 0, 1};
 int dy[4] = {1, 0, -1, 0};
 
-// Declare our current status
-std::pair <int, int> curr;
+std::vector <std::vector <int>> depth(width);
+std::vector <std::vector <bool>> used(width);
 
-void clear() {
+void prepare() {
 
-    curr.first = 5000;
-    curr.second = 5000;
-    depth[5000][5000] = true;
-}
-
-// Calculate our shortest path with every key we have
-void move(int &direction) {
-
-    // Decalre our new position
-    int x = curr.first + dx[direction];
-    int y = curr.second + dy[direction];
-
-    // Return the shortest path if we're already there before
-    if (status[x][y]) {
-        curr.first = x;
-        curr.second = y;
-
-        return;
+    for (int i = 0; i < width; i ++) {
+        depth[i].resize(width);
+        used[i].resize(width);
     }
 
-    // If we' re not there before
-    status[x][y] = true;
-    curr.first = x;
-    curr.second = y;
+    used[curr.first][curr.second] = true;
+}
 
-    // Then calculate the shortest path
-    int min = 10000 + 10;
+void move(int &key) {
+
+    int x = curr.first + dx[key];
+    int y = curr.second + dy[key];
+    
+    if (used[x][y]) {
+        curr.first = x;
+        curr.second = y;
+        return;
+    }
+    
+    used[x][y] = true;
+    int min = 100000000;
+
     for (int i = 0; i < 4; i ++) {
 
-        // look for an used square with minimum value of step
         int newx = x + dx[i];
         int newy = y + dy[i];
 
-        if (status[newx][newy] == true 
-        && depth[newx][newy] < min) 
-            min = depth[newx][newy];
+        if (!used[newx][newy]) continue;
+        min = std::min(min, depth[newx][newy]);
     }
 
     depth[x][y] = min + 1;
+    curr.first = x;
+    curr.second = y;
 }
 
-int main (int agrc, const char * argv[]) {
 
+
+int nTest, k;
+
+int main (int argc, const char * argv[]) {
+    
     std::ios_base::sync_with_stdio(false);
-    freopen("cin.txt", "r", stdin);
-    freopen("cout.txt", "w", stdout);
+    std::cin.tie(NULL);
+    std::cout.tie(NULL);
 
-    curr.first = 5000;
-    curr.second = 5000;
-    depth[5000][5000] = true;
+    prepare();
+    std::cin >> nTest;
 
-    std::cout << curr.first << "\n";
-    std::cout << curr.second;
+    while (nTest --) {
+        std::cin >> k;
+        move(k);
+    }
+
+    std::cout << depth[curr.first][curr.second] << "\n";
 
     return 0;
 }
-
-
