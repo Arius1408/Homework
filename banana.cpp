@@ -1,4 +1,5 @@
 #include <iostream>
+#include <algorithm>
 #include <vector>
 
 int test;
@@ -13,12 +14,20 @@ bool possible(int &s, int &h, std::vector <int> &arr) {
 	}
 
 	if (t <= h) return true;
-	else retur false;
+	else return false;
 }
 
 int minTime(int &n, int &h, std::vector <int> &arr) {
 
-	int l = n; int r = h;
+    int l = 1000000000 + 10;
+    int r = -1;
+
+    for (int x : arr) {
+        l = std::min(l, x);
+        r = std::max(r, x);
+    }
+
+    if (h == arr.size()) return r;
 
 	while (l < r) {
 		int mid = (l+r+1)/2;
@@ -33,7 +42,7 @@ int minTime(int &n, int &h, std::vector <int> &arr) {
 }
 
 int main (int argc, const char * argv[]) {
-
+    
 	std::ios_base::sync_with_stdio(false);
 	std::cin.tie(NULL);
 	std::cout.tie(NULL);
@@ -44,7 +53,11 @@ int main (int argc, const char * argv[]) {
 		std::cin >> n >> h;
 		std::vector <int> arr(n);
 
-		std::cout << minTime(n, h, arr) << std::endl;
+        for (int i = 0; i < n; i ++) {
+            std::cin >> arr[i];
+        }
+
+		std::cout << minTime(n, h, arr) << "\n";
 	}
 
 	return 0;
