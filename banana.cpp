@@ -7,7 +7,7 @@ int n, h;
 
 bool possible(int &s, int &h, std::vector <int> &arr) {
 
-	int t = 0;
+	long long t = 0;
 
 	for (int i = 0; i < arr.size(); i ++) {
 		t += (arr[i] / s + 1);
