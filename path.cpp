@@ -2,57 +2,68 @@
 using namespace std;
 
 const int N = 1e3;
+vector <vector <pair <int, int>>> a;
 queue <pair <int, int>> q;
-int w, l, x, y, x1, y1;
-
-vector <vector <pair <int, int>>> a(N);
 int depth[N][N];
 int arr[N][N];
 
+void clearData() {
+    a.resize(N);
+}
+
+int w, l, x, y, x1, ny;
 int dx[4] = {0, -1, 0, 1};
 int dy[4] = {1, 0, -1, 0};
 
 int main () {
+    
     ios::sync_with_stdio(false);
     cin.tie(0); cout.tie(0);
-    a.resize(N);
-    
-    cin >> w >> l >> x >> y >> x1 >> y1;
+
+    clearData();
+    cin >> w >> l >> x >> y >> x1 >> ny;
+
     for (int i = 0; i < w; i ++) {
         for (int j = 0; j < l; j ++) {
             cin >> arr[i][j];
-            a[arr[i][j]].push_back({i, j});
-        }   
+            if (arr[i][j]) a[arr[i][j]].push_back({i, j});
+        }
     }
-    
+
     q.push({x, y});
-    
-    while (!q.empty()) {
-        int a = q.front().first;
-        int b = q.front().second;
+
+    while(!q.empty()) {
+        int c = q.front().first;
+        int d = q.front().second;
         q.pop();
-        
+
         for (int i = 0; i < 4; i ++) {
-            int newa = a + dx[i];
-            int newb = b + dy[i];
-            if (newa < 0 || newa > l-1) continue;
-            if (newb < 0 || newb > w-1) continue;
-            if (arr[newa][newb] == 0) continue;
-            
-            depth[newa][newb] = depth[a][b] + 1;
-            q.push({newa, newb});
+            int newc = c + dx[i];
+            int newd = d + dy[i];
+
+            if (newc < 0 || newc >= w) continue;
+            if (newd < 0 || newd >= l) continue;
+            if (arr[newc][newd] == 0) continue;
+
+            depth[newc][newd] = depth[c][d] + 1;
+            if (newc == x1 && newd == ny) {
+                cout << depth[x1][ny];
+                return 0;
+            }
+            q.push({newc, newd});
         }
-        
-        for (pair i : a[(arr[a][b])]) {
-            int newa = i.first;
-            int newb = i.second;
-            depth[newa][newb] = depth[a][b] + 1;
-            
-            q.push({newa, newb});
+
+        for (pair <int, int> i : a[arr[c][d]]) {
+            if (i.first != x && i.second != d) {
+                depth[i.first][i.second] = depth[c][d] + 1;
+                if (i.first == x1 && i.second == ny) {
+                    cout << depth[x1][ny];
+                    return 0;
+                }
+                q.push({i.first, i.second});
+            }
         }
     }
-    
-    cout << depth[x1][y1];
-    
+
     return 0;
 }
