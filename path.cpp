@@ -45,7 +45,11 @@ int main () {
             if (newd < 0 || newd >= l) continue;
             if (arr[newc][newd] == 0) continue;
 
-            depth[newc][newd] = depth[c][d] + 1;
+            if (depth[newc][newd] == 0) {
+                depth[newc][newd] = depth[c][d] + 1;
+            } else {
+                depth[newc][newd] = min(depth[newc][newd], (depth[c][d] + 1));
+            }
             if (newc == x1 && newd == ny) {
                 cout << depth[x1][ny];
                 return 0;
@@ -55,7 +59,12 @@ int main () {
 
         for (pair <int, int> i : a[arr[c][d]]) {
             if (i.first != x && i.second != d) {
-                depth[i.first][i.second] = depth[c][d] + 1;
+                int newc = i.first, newd = i.second;
+                if (depth[newc][newd] == 0) {
+                    depth[newc][newd] = depth[c][d] + 1;
+                } else {
+                    depth[newc][newd] = min(depth[newc][newd], (depth[c][d] + 1));
+                }
                 if (i.first == x1 && i.second == ny) {
                     cout << depth[x1][ny];
                     return 0;
